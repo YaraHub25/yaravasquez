@@ -1455,7 +1455,7 @@
         this.indicatorsContainer = element.querySelector('[data-carousel-indicators]');
         this.counter = element.querySelector('[data-carousel-counter]');
         
-        this.currentIndex = 0;
+        this.currentindex = 0;
         this.totalSlides = this.slides.length;
         
         this.init();
@@ -1489,7 +1489,7 @@
       }
       
       goToSlide(index) {
-        this.currentIndex = index;
+        this.currentindex = index;
         const offset = -100 * index;
         this.track.style.transform = `translateX(${offset}%)`;
         
@@ -1510,8 +1510,8 @@
       }
       
       prev() {
-        const prevIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
-        this.goToSlide(prevIndex);
+        const previndex = (this.currentindex - 1 + this.totalSlides) % this.totalSlides;
+        this.goToSlide(previndex);
       }
       
       addSwipeSupport() {
