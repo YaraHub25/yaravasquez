@@ -38,10 +38,7 @@
     ============================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-    }
+    html { scroll-behavior: smooth; font-size: 16px; }
 
     body {
       background: var(--black);
@@ -56,14 +53,12 @@
     img { display: block; max-width: 100%; height: auto; }
     a { color: inherit; text-decoration: none; }
 
-    /* Focus styles for accessibility */
     :focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 3px;
       border-radius: var(--radius);
     }
 
-    /* Skip to main content (accessibility) */
     .skip-link {
       position: absolute;
       top: -100%;
@@ -119,7 +114,6 @@
 
     .nav-links a:hover { color: var(--gold); }
 
-    /* Hamburger (mobile) */
     .nav-toggle {
       display: none;
       background: none;
@@ -148,7 +142,6 @@
       overflow: hidden;
     }
 
-    /* Subtle grid texture */
     #home::before {
       content: '';
       position: absolute;
@@ -160,7 +153,6 @@
       pointer-events: none;
     }
 
-    /* Radial glow */
     #home::after {
       content: '';
       position: absolute;
@@ -259,7 +251,6 @@
     }
     .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
 
-    /* Skills ticker */
     .ticker-wrap {
       margin-top: 5rem;
       overflow: hidden;
@@ -290,7 +281,7 @@
     }
 
     /* =============================================
-       SECTIONS (shared)
+       SECTIONS
     ============================================= */
     section { padding: 6rem 2rem; }
 
@@ -328,30 +319,36 @@
     h2 em { font-style: italic; color: var(--gold); }
 
     /* =============================================
-       ABOUT
+       ABOUT - OPTION C: 70/30 Text Dominant
     ============================================= */
     #about { background: var(--surface); }
 
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 3rem;
       align-items: start;
     }
 
-    /* Photo column */
-    .about-photo-col {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+    .about-text p {
+      color: var(--white-dim);
+      margin-bottom: 1.25rem;
+      font-size: 1rem;
+      line-height: 1.85;
     }
 
+    .about-text p strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* Photo - compact square crop */
     .photo-frame {
       position: relative;
       border-radius: 8px;
       overflow: hidden;
       aspect-ratio: 3/4;
-      max-height: 480px;
+      border: 1px solid var(--border);
     }
 
     .photo-frame img {
@@ -367,49 +364,32 @@
       filter: grayscale(0%) contrast(1.0);
     }
 
-    /* Gold corner accent */
-    .photo-frame::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: -1px;
-      right: -1px;
-      bottom: -1px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* Subtle gradient fade at bottom of photo */
     .photo-frame::after {
       content: '';
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 35%;
+      height: 30%;
       background: linear-gradient(to top, rgba(22,22,22,0.6) 0%, transparent 100%);
-      z-index: 2;
       pointer-events: none;
     }
 
-    /* Caption overlay on photo */
     .photo-caption {
       position: absolute;
-      bottom: 1.25rem;
-      left: 1.25rem;
-      z-index: 3;
-      font-size: 0.72rem;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      z-index: 1;
+      font-size: 0.7rem;
       color: rgba(245,240,232,0.7);
       letter-spacing: 0.08em;
-      font-weight: 400;
     }
 
     .photo-caption strong {
       display: block;
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 500;
       margin-bottom: 0.15rem;
     }
@@ -418,18 +398,6 @@
       margin-top: 3rem;
       padding-top: 3rem;
       border-top: 1px solid var(--border);
-    }
-
-    .about-text p {
-      color: var(--white-dim);
-      margin-bottom: 1.25rem;
-      font-size: 1rem;
-      line-height: 1.85;
-    }
-
-    .about-text p strong {
-      color: var(--white);
-      font-weight: 500;
     }
 
     .about-stats {
@@ -461,7 +429,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* Skills in about */
     .skills-block {
       margin-top: 2rem;
     }
@@ -494,7 +461,137 @@
     .skill-tag:hover { border-color: var(--gold); color: var(--gold); }
 
     /* =============================================
-       EXPERIENCE / RESUME
+       CAROUSEL (integrated from carousel-component.css)
+    ============================================= */
+    .project-carousel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: var(--surface);
+      border-radius: var(--radius) var(--radius) 0 0;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border);
+      color: var(--white);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      z-index: 10;
+    }
+
+    .carousel-nav:hover {
+      background: rgba(201,168,76,0.2);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .carousel-nav:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .carousel-prev { left: 1rem; }
+    .carousel-next { right: 1rem; }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.3);
+      border: 1px solid rgba(245,240,232,0.2);
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .carousel-dot:hover {
+      background: rgba(245,240,232,0.5);
+      transform: scale(1.2);
+    }
+
+    .carousel-dot.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      transform: scale(1.1);
+    }
+
+    .carousel-counter {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(4px);
+      padding: 0.35rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      color: var(--white-dim);
+      font-weight: 500;
+      z-index: 10;
+    }
+
+    .carousel-hint {
+      position: absolute;
+      bottom: 3.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--white-dim);
+      opacity: 0.6;
+      pointer-events: none;
+      animation: fade-hint 3s ease-in-out infinite;
+    }
+
+    @keyframes fade-hint {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.2; }
+    }
+
+    .carousel-interacted .carousel-hint {
+      display: none;
+    }
+
+    /* =============================================
+       RESUME / EXPERIENCE
     ============================================= */
     #resume { background: var(--black); }
 
@@ -609,7 +706,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* Education */
     .edu-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -665,32 +761,6 @@
       flex-direction: column;
     }
     .project-card:hover { border-color: var(--gold); transform: translateY(-3px); }
-
-    .project-img-wrap {
-      aspect-ratio: 16/10;
-      background: var(--surface);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .project-img-placeholder {
-      font-family: var(--serif);
-      font-size: 3rem;
-      color: var(--gold);
-      opacity: 0.3;
-      font-style: italic;
-    }
-
-    .project-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    .project-card:hover .project-img-wrap img { transform: scale(1.03); }
 
     .project-body {
       padding: 1.5rem;
@@ -754,7 +824,6 @@
     }
     .project-link.primary:hover { background: var(--gold); color: var(--black); }
 
-    /* Status badge */
     .status-badge {
       display: inline-flex;
       align-items: center;
@@ -862,17 +931,24 @@
       .about-stats { grid-template-columns: 1fr 1fr; }
       .photo-frame { max-height: 320px; aspect-ratio: 4/3; }
       .photo-frame img { object-position: center 18%; }
-      .about-stats { grid-template-columns: 1fr 1fr; }
       .edu-grid { grid-template-columns: 1fr; }
       .timeline::before { display: none; }
       .job { padding-left: 0; }
       .job::before { display: none; }
       .hero-ctas { flex-direction: column; }
       .btn-primary, .btn-outline { text-align: center; justify-content: center; }
+
+      /* Carousel mobile */
+      .carousel-nav { width: 2rem; height: 2rem; }
+      .carousel-prev { left: 0.5rem; }
+      .carousel-next { right: 0.5rem; }
+      .carousel-counter { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
+      .carousel-indicators { bottom: 0.75rem; gap: 0.4rem; }
+      .carousel-dot { width: 6px; height: 6px; }
     }
 
     /* =============================================
-       ANIMATIONS (respects prefers-reduced-motion)
+       ANIMATIONS
     ============================================= */
     @media (prefers-reduced-motion: no-preference) {
       .fade-up {
@@ -888,17 +964,19 @@
       .fade-up:nth-child(3) { transition-delay: 0.2s; }
       .fade-up:nth-child(4) { transition-delay: 0.3s; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .carousel-track {
+        transition: none;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Accessibility: Skip Navigation -->
   <a href="#main" class="skip-link">Skip to main content</a>
 
-  <!-- ============================================================
-       NAVIGATION
-  ============================================================ -->
   <nav role="navigation" aria-label="Main navigation">
     <a href="#home" class="nav-logo">Yara Vasquez</a>
     <ul class="nav-links">
@@ -912,9 +990,6 @@
     </button>
   </nav>
 
-  <!-- ============================================================
-       MAIN CONTENT
-  ============================================================ -->
   <main id="main">
 
     <!-- ========== HERO ========== -->
@@ -932,7 +1007,6 @@
           <a href="#contact" class="btn-outline">Get In Touch</a>
         </div>
 
-        <!-- Skills Ticker -->
         <div class="ticker-wrap" aria-hidden="true">
           <div class="ticker">
             <span class="ticker-item">React <span>·</span></span>
@@ -945,7 +1019,6 @@
             <span class="ticker-item">Flutter <span>·</span></span>
             <span class="ticker-item">Figma <span>·</span></span>
             <span class="ticker-item">Git/GitHub <span>·</span></span>
-            <!-- Duplicate for seamless loop -->
             <span class="ticker-item">React <span>·</span></span>
             <span class="ticker-item">TypeScript <span>·</span></span>
             <span class="ticker-item">Java <span>·</span></span>
@@ -961,12 +1034,12 @@
       </div>
     </section>
 
-    <!-- ========== ABOUT ========== -->
+    <!-- ========== ABOUT (Option C: 70/30 Layout) ========== -->
     <section id="about" aria-label="About Yara Vasquez">
       <div class="section-inner">
         <p class="section-label">About Me</p>
 
-        <!-- Top row: bio text + photo -->
+        <!-- Top row: bio text (70%) + photo (30%) -->
         <div class="about-grid">
           <div class="about-text fade-up">
             <h2>Code with<br><em>purpose.</em></h2>
@@ -989,8 +1062,8 @@
             </p>
           </div>
 
-          <!-- Photo column -->
-          <div class="about-photo-col fade-up">
+          <!-- Photo column (smaller, 30%) -->
+          <div class="fade-up">
             <div class="photo-frame">
               <img
                 src="Yara.jpg"
@@ -1051,7 +1124,7 @@
       </div>
     </section>
 
-    <!-- ========== RESUME / EXPERIENCE ========== -->
+    <!-- ========== RESUME ========== -->
     <section id="resume" aria-label="Resume and Experience">
       <div class="section-inner">
         <div class="resume-download-row">
@@ -1059,7 +1132,6 @@
             <p class="section-label">Resume</p>
             <h2>Experience &amp;<br><em>Education</em></h2>
           </div>
-          <!-- UPDATE THIS LINK when you have a PDF -->
           <a href="assets/Yara-Vasquez-Resume.pdf" class="btn-outline" download aria-label="Download Yara Vasquez Resume PDF">
             ↓ Download PDF
           </a>
@@ -1067,7 +1139,6 @@
 
         <div class="timeline" role="list">
 
-          <!-- Job 1: Yairo -->
           <article class="job fade-up" role="listitem">
             <div class="job-meta">
               <h3 class="job-title">Software Engineer (Founder)</h3>
@@ -1087,7 +1158,6 @@
             </div>
           </article>
 
-          <!-- Job 2: SWEN 661 -->
           <article class="job fade-up" role="listitem">
             <div class="job-meta">
               <h3 class="job-title">UI/UX &amp; Accessibility Stakeholder</h3>
@@ -1109,7 +1179,6 @@
             </div>
           </article>
 
-          <!-- Job 3: CareConnect -->
           <article class="job fade-up" role="listitem">
             <div class="job-meta">
               <h3 class="job-title">Frontend Developer</h3>
@@ -1134,9 +1203,8 @@
             </div>
           </article>
 
-        </div><!-- /timeline -->
+        </div>
 
-        <!-- Education -->
         <h3 style="font-family:var(--serif);font-size:1.5rem;font-weight:400;margin:3rem 0 1rem;color:var(--white-dim);">Education</h3>
         <div class="edu-grid">
           <div class="edu-card fade-up">
@@ -1155,7 +1223,7 @@
       </div>
     </section>
 
-    <!-- ========== PROJECTS ========== -->
+    <!-- ========== PROJECTS (with carousels) ========== -->
     <section id="projects" aria-label="Portfolio Projects">
       <div class="section-inner">
         <p class="section-label">Projects</p>
@@ -1163,13 +1231,56 @@
 
         <div class="projects-grid">
 
-          <!-- CareConnect -->
+          <!-- CareConnect with 8-image carousel -->
           <article class="project-card fade-up">
-            <div class="project-img-wrap">
-              <!-- Replace src with your actual screenshot -->
-              <!-- <img src="assets/careconnect/careconnect-dashboard.png" alt="CareConnect dashboard showing patient overview and medication tracking" /> -->
-              <span class="project-img-placeholder" aria-hidden="true">CC</span>
+            <div class="project-carousel" data-carousel>
+              <div class="carousel-track" data-carousel-track>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/splash.png" alt="CareConnect splash screen" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/login-page.png" alt="CareConnect login page" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/notification-banner.png" alt="Notification banner design" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/patient-homepage.png" alt="Patient homepage" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/patient-features.png" alt="Patient features screen" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/caregiver-features.png" alt="Caregiver features screen" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/caregiver-homepage.png" alt="Caregiver homepage" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/careconnect/accessibility.png" alt="Accessibility settings" loading="lazy" />
+                </div>
+              </div>
+              
+              <button class="carousel-nav carousel-prev" aria-label="Previous slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="carousel-nav carousel-next" aria-label="Next slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              
+              <div class="carousel-indicators" data-carousel-indicators></div>
+              
+              <div class="carousel-counter" data-carousel-counter>
+                <span data-current>1</span> / <span data-total>8</span>
+              </div>
+              
+              <div class="carousel-hint" aria-hidden="true">← Swipe →</div>
             </div>
+
             <div class="project-body">
               <p class="project-type">Healthcare · UI/UX · Full-Stack</p>
               <span class="status-badge active">Shipped</span>
@@ -1188,18 +1299,46 @@
                 <span class="stack-tag">WCAG 2.1</span>
               </div>
               <div class="project-links">
-                <!-- Add Figma link here when ready -->
-                <a href="#" class="project-link primary" aria-label="View CareConnect Figma prototype">View Figma →</a>
-                <a href="https://github.com/YaraHub25" class="project-link" aria-label="View CareConnect on GitHub">GitHub</a>
+                <a href="https://github.com/YaraHub25" class="project-link primary" aria-label="View CareConnect on GitHub">View on GitHub →</a>
               </div>
             </div>
           </article>
 
-          <!-- Yairo -->
+          <!-- Yairo with 3-image carousel -->
           <article class="project-card fade-up">
-            <div class="project-img-wrap">
-              <span class="project-img-placeholder" aria-hidden="true">Y</span>
+            <div class="project-carousel" data-carousel>
+              <div class="carousel-track" data-carousel-track>
+                <div class="carousel-slide">
+                  <img src="assets/yairo/homepage.png" alt="Yairo homepage" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/yairo/analytics.png" alt="Yairo analytics dashboard" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/yairo/result.png" alt="Yairo result screen" loading="lazy" />
+                </div>
+              </div>
+              
+              <button class="carousel-nav carousel-prev" aria-label="Previous slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="carousel-nav carousel-next" aria-label="Next slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              
+              <div class="carousel-indicators" data-carousel-indicators></div>
+              
+              <div class="carousel-counter" data-carousel-counter>
+                <span data-current>1</span> / <span data-total>3</span>
+              </div>
+              
+              <div class="carousel-hint" aria-hidden="true">← Swipe →</div>
             </div>
+
             <div class="project-body">
               <p class="project-type">Community Platform · Full-Stack · Startup</p>
               <span class="status-badge wip">In Development</span>
@@ -1223,11 +1362,16 @@
             </div>
           </article>
 
-          <!-- SWEN 661 / CareConnect Accessibility Variant -->
+          <!-- SWEN 661 (no carousel needed) -->
           <article class="project-card fade-up">
-            <div class="project-img-wrap">
-              <span class="project-img-placeholder" aria-hidden="true">A11Y</span>
+            <div class="project-carousel" data-carousel>
+              <div class="carousel-track" data-carousel-track>
+                <div class="carousel-slide">
+                  <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface);font-family:var(--serif);font-size:3rem;color:var(--gold);opacity:0.3;font-style:italic;">A11Y</div>
+                </div>
+              </div>
             </div>
+
             <div class="project-body">
               <p class="project-type">Accessibility · Advisory · UI/UX</p>
               <span class="status-badge active">Active</span>
@@ -1269,7 +1413,6 @@
 
           <div class="contact-links">
             <a href="https://www.linkedin.com/in/yara-vasquez-ab4b75277/" class="contact-link" target="_blank" rel="noopener" aria-label="View Yara's LinkedIn profile">
-              <!-- LinkedIn icon -->
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
               LinkedIn
             </a>
@@ -1290,20 +1433,127 @@
 
   </main>
 
-  <!-- ============================================================
-       FOOTER
-  ============================================================ -->
   <footer role="contentinfo">
     <p>
       © 2026 Yara Vasquez · Built with HTML, CSS &amp; care ·
-      <a href="https://github.com/YaraHub25/portfolio" target="_blank" rel="noopener">View source on GitHub</a>
+      <a href="https://github.com/YaraHub25/yaravasquez" target="_blank" rel="noopener">View source on GitHub</a>
     </p>
   </footer>
 
   <!-- ============================================================
-       JAVASCRIPT
+       JAVASCRIPT (Carousel + Navigation)
   ============================================================ -->
   <script>
+    // Carousel functionality
+    class Carousel {
+      constructor(element) {
+        this.carousel = element;
+        this.track = element.querySelector('[data-carousel-track]');
+        this.slides = Array.from(this.track.children);
+        this.prevButton = element.querySelector('.carousel-prev');
+        this.nextButton = element.querySelector('.carousel-next');
+        this.indicatorsContainer = element.querySelector('[data-carousel-indicators]');
+        this.counter = element.querySelector('[data-carousel-counter]');
+        
+        this.currentIndex = 0;
+        this.totalSlides = this.slides.length;
+        
+        this.init();
+      }
+      
+      init() {
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('button');
+          dot.className = 'carousel-dot';
+          dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+          if (index === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.indicatorsContainer.appendChild(dot);
+        });
+        
+        this.dots = Array.from(this.indicatorsContainer.children);
+        
+        this.prevButton.addEventListener('click', () => this.prev());
+        this.nextButton.addEventListener('click', () => this.next());
+        
+        this.carousel.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') this.prev();
+          if (e.key === 'ArrowRight') this.next();
+        });
+        
+        this.addSwipeSupport();
+        
+        if (this.counter) {
+          this.counter.querySelector('[data-total]').textContent = this.totalSlides;
+        }
+      }
+      
+      goToSlide(index) {
+        this.currentIndex = index;
+        const offset = -100 * index;
+        this.track.style.transform = `translateX(${offset}%)`;
+        
+        this.dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+        
+        if (this.counter) {
+          this.counter.querySelector('[data-current]').textContent = index + 1;
+        }
+        
+        this.carousel.classList.add('carousel-interacted');
+      }
+      
+      next() {
+        const nextIndex = (this.currentIndex + 1) % this.totalSlides;
+        this.goToSlide(nextIndex);
+      }
+      
+      prev() {
+        const prevIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+        this.goToSlide(prevIndex);
+      }
+      
+      addSwipeSupport() {
+        let startX = 0;
+        let isDragging = false;
+        
+        this.carousel.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+          isDragging = true;
+        });
+        
+        this.carousel.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+        });
+        
+        this.carousel.addEventListener('touchend', (e) => {
+          if (!isDragging) return;
+          
+          const endX = e.changedTouches[0].clientX;
+          const diff = startX - endX;
+          
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              this.next();
+            } else {
+              this.prev();
+            }
+          }
+          
+          isDragging = false;
+        });
+      }
+    }
+
+    // Initialize all carousels on page
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-carousel]').forEach(el => {
+        new Carousel(el);
+      });
+    });
+
     // Fade-in on scroll
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
@@ -1322,7 +1572,6 @@
       toggle.setAttribute('aria-expanded', String(!open));
     });
 
-    // Close mobile nav on link click
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
         if (window.innerWidth <= 768) navLinks.style.cssText = '';
