@@ -1,0 +1,400 @@
+/* ============================================================
+   IMAGE CAROUSEL COMPONENT - For CareConnect & Yairo Screenshots
+   ============================================================
+   
+   Add this CSS to your portfolio's <style> section
+   Add the HTML structure inside each .project-card
+   Add the JavaScript at the bottom before </body>
+*/
+
+/* =============================================
+   CAROUSEL CSS
+============================================= */
+.project-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  background: var(--surface);
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+}
+
+/* Carousel track (contains all slides) */
+.carousel-track {
+  display: flex;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+/* Individual slides */
+.carousel-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder for missing images */
+.carousel-slide-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  font-family: var(--serif);
+  font-size: 3rem;
+  color: var(--gold);
+  opacity: 0.3;
+  font-style: italic;
+}
+
+/* Navigation arrows */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(10,10,10,0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border);
+  color: var(--white);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  z-index: 10;
+}
+
+.carousel-nav:hover {
+  background: rgba(201,168,76,0.2);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.carousel-nav:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.carousel-prev {
+  left: 1rem;
+}
+
+.carousel-next {
+  right: 1rem;
+}
+
+/* Dot indicators */
+.carousel-indicators {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.3);
+  border: 1px solid rgba(245,240,232,0.2);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-dot:hover {
+  background: rgba(245,240,232,0.5);
+  transform: scale(1.2);
+}
+
+.carousel-dot.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  transform: scale(1.1);
+}
+
+/* Counter (optional - shows "3 / 8") */
+.carousel-counter {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(10,10,10,0.7);
+  backdrop-filter: blur(4px);
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  color: var(--white-dim);
+  font-weight: 500;
+  z-index: 10;
+}
+
+/* Touch/swipe indication (mobile) */
+.carousel-hint {
+  position: absolute;
+  bottom: 3.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: var(--white-dim);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: fade-hint 3s ease-in-out infinite;
+}
+
+@keyframes fade-hint {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.2; }
+}
+
+/* Hide hint after first interaction */
+.carousel-interacted .carousel-hint {
+  display: none;
+}
+
+/* =============================================
+   HTML STRUCTURE (Place inside .project-card)
+============================================= */
+
+/*
+
+<!-- Replace the .project-img-wrap div with this: -->
+
+<div class="project-carousel" data-carousel>
+  <div class="carousel-track" data-carousel-track>
+    
+    <!-- Slide 1 -->
+    <div class="carousel-slide">
+      <img src="assets/careconnect/splash.png" alt="CareConnect splash screen" loading="lazy" />
+    </div>
+    
+    <!-- Slide 2 -->
+    <div class="carousel-slide">
+      <img src="assets/careconnect/login-page.png" alt="CareConnect login page" loading="lazy" />
+    </div>
+    
+    <!-- Slide 3 -->
+    <div class="carousel-slide">
+      <img src="assets/careconnect/notification-banner.png" alt="Notification banner design" loading="lazy" />
+    </div>
+    
+    <!-- Add all 8 slides for CareConnect -->
+    <!-- Or 3 slides for Yairo -->
+    
+  </div>
+  
+  <!-- Navigation arrows -->
+  <button class="carousel-nav carousel-prev" aria-label="Previous slide">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+  <button class="carousel-nav carousel-next" aria-label="Next slide">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+  
+  <!-- Dot indicators -->
+  <div class="carousel-indicators" data-carousel-indicators></div>
+  
+  <!-- Counter (optional) -->
+  <div class="carousel-counter" data-carousel-counter>
+    <span data-current>1</span> / <span data-total>8</span>
+  </div>
+  
+  <!-- Swipe hint (mobile only) -->
+  <div class="carousel-hint" aria-hidden="true">← Swipe →</div>
+</div>
+
+*/
+
+/* =============================================
+   JAVASCRIPT (Place before </body>)
+============================================= */
+
+/*
+
+<script>
+// Carousel functionality
+class Carousel {
+  constructor(element) {
+    this.carousel = element;
+    this.track = element.querySelector('[data-carousel-track]');
+    this.slides = Array.from(this.track.children);
+    this.prevButton = element.querySelector('.carousel-prev');
+    this.nextButton = element.querySelector('.carousel-next');
+    this.indicatorsContainer = element.querySelector('[data-carousel-indicators]');
+    this.counter = element.querySelector('[data-carousel-counter]');
+    
+    this.currentIndex = 0;
+    this.totalSlides = this.slides.length;
+    
+    this.init();
+  }
+  
+  init() {
+    // Create dot indicators
+    this.slides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot';
+      dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+      if (index === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => this.goToSlide(index));
+      this.indicatorsContainer.appendChild(dot);
+    });
+    
+    this.dots = Array.from(this.indicatorsContainer.children);
+    
+    // Navigation buttons
+    this.prevButton.addEventListener('click', () => this.prev());
+    this.nextButton.addEventListener('click', () => this.next());
+    
+    // Keyboard navigation
+    this.carousel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') this.prev();
+      if (e.key === 'ArrowRight') this.next();
+    });
+    
+    // Touch/swipe support
+    this.addSwipeSupport();
+    
+    // Update counter
+    if (this.counter) {
+      this.counter.querySelector('[data-total]').textContent = this.totalSlides;
+    }
+  }
+  
+  goToSlide(index) {
+    this.currentIndex = index;
+    const offset = -100 * index;
+    this.track.style.transform = `translateX(${offset}%)`;
+    
+    // Update active dot
+    this.dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+    
+    // Update counter
+    if (this.counter) {
+      this.counter.querySelector('[data-current]').textContent = index + 1;
+    }
+    
+    // Mark as interacted (hides swipe hint)
+    this.carousel.classList.add('carousel-interacted');
+  }
+  
+  next() {
+    const nextIndex = (this.currentIndex + 1) % this.totalSlides;
+    this.goToSlide(nextIndex);
+  }
+  
+  prev() {
+    const prevIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+    this.goToSlide(prevIndex);
+  }
+  
+  addSwipeSupport() {
+    let startX = 0;
+    let isDragging = false;
+    
+    this.carousel.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    });
+    
+    this.carousel.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+    });
+    
+    this.carousel.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      
+      // Swipe threshold: 50px
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          this.next(); // Swiped left
+        } else {
+          this.prev(); // Swiped right
+        }
+      }
+      
+      isDragging = false;
+    });
+  }
+}
+
+// Initialize all carousels on page
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-carousel]').forEach(el => {
+    new Carousel(el);
+  });
+});
+</script>
+
+*/
+
+/* =============================================
+   MOBILE RESPONSIVE
+============================================= */
+
+@media (max-width: 768px) {
+  .carousel-nav {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .carousel-prev { left: 0.5rem; }
+  .carousel-next { right: 0.5rem; }
+  
+  .carousel-counter {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+  }
+  
+  .carousel-indicators {
+    bottom: 0.75rem;
+    gap: 0.4rem;
+  }
+  
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* =============================================
+   ACCESSIBILITY NOTES
+============================================= */
+
+/*
+- Carousel uses semantic <button> elements for navigation
+- Keyboard navigation supported (arrow keys)
+- All buttons have proper aria-labels
+- Focus indicators are visible
+- Images have descriptive alt text
+- Works with screen readers
+- Respects prefers-reduced-motion (add this if needed):
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    transition: none;
+  }
+}
+*/
