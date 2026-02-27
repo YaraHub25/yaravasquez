@@ -24,6 +24,8 @@
       --gold:        #c9a84c;
       --gold-light:  #e8c97a;
       --gold-muted:  rgba(201,168,76,0.15);
+      --teal:        #2dd4bf;
+      --teal-muted:  rgba(45,212,191,0.12);
       --white:       #f5f0e8;
       --white-dim:   rgba(245,240,232,0.6);
       --white-faint: rgba(245,240,232,0.15);
@@ -37,9 +39,7 @@
        RESET & BASE
     ============================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; font-size: 16px; }
-
     body {
       background: var(--black);
       color: var(--white);
@@ -49,16 +49,13 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-
     img { display: block; max-width: 100%; height: auto; }
     a { color: inherit; text-decoration: none; }
-
     :focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 3px;
       border-radius: var(--radius);
     }
-
     .skip-link {
       position: absolute;
       top: -100%;
@@ -89,20 +86,17 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-
     .nav-logo {
       font-family: var(--serif);
       font-size: 1.2rem;
       color: var(--gold);
       letter-spacing: 0.02em;
     }
-
     .nav-links {
       display: flex;
       gap: 2rem;
       list-style: none;
     }
-
     .nav-links a {
       font-size: 0.85rem;
       font-weight: 500;
@@ -111,9 +105,7 @@
       color: var(--white-dim);
       transition: color var(--transition);
     }
-
     .nav-links a:hover { color: var(--gold); }
-
     .nav-toggle {
       display: none;
       background: none;
@@ -131,165 +123,194 @@
     }
 
     /* =============================================
-       HERO
+       HERO — FULL BLEED OVERLAY
     ============================================= */
     #home {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 8rem 2rem 4rem;
       position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
       overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      cursor: none;
     }
 
-    #home::before {
+    /* Full-bleed background photo */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 12%;
+      filter: brightness(0.55) contrast(1.08);
+      transform: scale(1.03);
+      transition: filter 0.8s ease, transform 8s ease;
+      display: block;
+      max-width: unset;
+    }
+    #home:hover .hero-bg img {
+      filter: brightness(0.65) contrast(1.05);
+      transform: scale(1.0);
+    }
+
+    /* Gradient: dark on left, fade out right — keeps face visible */
+    .hero-bg::after {
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
+      background:
+        linear-gradient(to right, rgba(8,8,8,0.82) 0%, rgba(8,8,8,0.45) 55%, rgba(8,8,8,0.1) 100%),
+        linear-gradient(to top, rgba(8,8,8,0.7) 0%, transparent 45%);
     }
 
-    #home::after {
-      content: '';
-      position: absolute;
-      top: 20%;
-      right: -10%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    /* Custom cursor */
+    .custom-cursor {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(201,168,76,0.6);
+      border-radius: 50%;
       pointer-events: none;
+      z-index: 9999;
+      left: 0; top: 0;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+      mix-blend-mode: exclusion;
+    }
+    .custom-cursor.grow {
+      width: 64px;
+      height: 64px;
+      border-color: rgba(201,168,76,0.4);
     }
 
-    .hero-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
+    /* Text content — bottom-left */
+    .hero-content {
       position: relative;
-      z-index: 1;
-    }
-
-    .hero-eyebrow {
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .hero-eyebrow::before {
-      content: '';
-      display: block;
-      width: 2rem;
-      height: 1px;
-      background: var(--gold);
+      z-index: 2;
+      padding: 0 4.5rem 5rem;
+      max-width: 680px;
     }
 
     h1 {
       font-family: var(--serif);
-      font-size: clamp(3rem, 8vw, 6.5rem);
-      line-height: 1.0;
-      margin-bottom: 0.25rem;
+      font-size: clamp(3.8rem, 7vw, 7.5rem);
+      line-height: 0.92;
       font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeSlideUp 1s 0.2s forwards;
     }
-
     h1 em {
       font-style: italic;
       color: var(--gold);
-    }
-
-    .hero-tagline {
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      color: var(--white-dim);
-      max-width: 560px;
-      margin: 1.75rem 0 2.5rem;
-      line-height: 1.8;
+      display: block;
     }
 
     .hero-ctas {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeSlideUp 0.8s 0.55s forwards;
     }
 
     .btn-primary {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.85rem 2rem;
+      padding: 0.9rem 2.2rem;
       background: var(--gold);
       color: var(--black);
       font-family: var(--sans);
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
-      border-radius: var(--radius);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
       transition: background var(--transition), transform var(--transition);
     }
-    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
 
     .btn-outline {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.85rem 2rem;
-      border: 1px solid var(--border);
-      color: var(--white-dim);
+      padding: 0.9rem 2.2rem;
+      border: 1px solid rgba(245,240,232,0.3);
+      color: rgba(245,240,232,0.7);
       font-family: var(--sans);
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      letter-spacing: 0.05em;
-      border-radius: var(--radius);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
       transition: border-color var(--transition), color var(--transition), transform var(--transition);
     }
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
 
-    .ticker-wrap {
-      margin-top: 5rem;
-      overflow: hidden;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 0.85rem 0;
-    }
-    .ticker {
+    /* Scroll line — bottom right corner */
+    .hero-scroll {
+      position: absolute;
+      bottom: 3rem;
+      right: 3rem;
+      z-index: 2;
       display: flex;
-      gap: 3rem;
-      animation: ticker 20s linear infinite;
-      white-space: nowrap;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: fadeSlideUp 0.8s 1s forwards;
     }
-    .ticker-item {
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
+    .hero-scroll span {
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--white-dim);
+      color: rgba(245,240,232,0.3);
+      writing-mode: vertical-lr;
     }
-    .ticker-item span {
-      color: var(--gold);
-      margin-right: 3rem;
+    .scroll-line {
+      width: 1px;
+      height: 52px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2.2s ease-in-out infinite;
     }
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.35; transform: scaleY(1); transform-origin: top; }
+      50%       { opacity: 1;    transform: scaleY(0.5); transform-origin: top; }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      #home { align-items: flex-end; cursor: auto; }
+      .hero-bg img { object-position: 65% 12%; }
+      .hero-bg::after {
+        background:
+          linear-gradient(to top, rgba(8,8,8,0.9) 0%, rgba(8,8,8,0.4) 55%, rgba(8,8,8,0.1) 100%);
+      }
+      .hero-content { padding: 0 1.5rem 3.5rem; max-width: 100%; }
+      h1 { font-size: clamp(3rem, 13vw, 5rem); margin-bottom: 2rem; }
+      .hero-ctas { flex-direction: column; }
+      .btn-primary, .btn-outline { text-align: center; justify-content: center; }
+      .hero-scroll { display: none; }
+      .custom-cursor { display: none; }
     }
 
     /* =============================================
        SECTIONS
     ============================================= */
     section { padding: 6rem 2rem; }
-
-    .section-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
+    .section-inner { max-width: 1100px; margin: 0 auto; }
     .section-label {
       font-size: 0.75rem;
       font-weight: 500;
@@ -308,7 +329,6 @@
       height: 1px;
       background: var(--gold);
     }
-
     h2 {
       font-family: var(--serif);
       font-size: clamp(2rem, 4vw, 3.25rem);
@@ -319,30 +339,19 @@
     h2 em { font-style: italic; color: var(--gold); }
 
     /* =============================================
-       ABOUT - OPTION C: 70/30 Text Dominant
+       ABOUT
     ============================================= */
     #about { background: var(--surface); }
-
     .about-grid {
-      display: grid;
-      grid-template-columns: 2.2fr 1fr;
-      gap: 3rem;
-      align-items: start;
+      display: block;
     }
-
     .about-text p {
       color: var(--white-dim);
       margin-bottom: 1.25rem;
       font-size: 1rem;
       line-height: 1.85;
     }
-
-    .about-text p strong {
-      color: var(--white);
-      font-weight: 500;
-    }
-
-    /* Photo - compact square crop */
+    .about-text p strong { color: var(--white); font-weight: 500; }
     .photo-frame {
       position: relative;
       border-radius: 8px;
@@ -350,7 +359,6 @@
       aspect-ratio: 3/4;
       border: 1px solid var(--border);
     }
-
     .photo-frame img {
       width: 100%;
       height: 100%;
@@ -359,11 +367,7 @@
       filter: grayscale(15%) contrast(1.05);
       transition: filter 0.4s ease;
     }
-
-    .photo-frame:hover img {
-      filter: grayscale(0%) contrast(1.0);
-    }
-
+    .photo-frame:hover img { filter: grayscale(0%) contrast(1.0); }
     .photo-frame::after {
       content: '';
       position: absolute;
@@ -374,7 +378,6 @@
       background: linear-gradient(to top, rgba(22,22,22,0.6) 0%, transparent 100%);
       pointer-events: none;
     }
-
     .photo-caption {
       position: absolute;
       bottom: 1rem;
@@ -385,7 +388,6 @@
       color: rgba(245,240,232,0.7);
       letter-spacing: 0.08em;
     }
-
     .photo-caption strong {
       display: block;
       color: var(--gold);
@@ -393,19 +395,16 @@
       font-weight: 500;
       margin-bottom: 0.15rem;
     }
-
     .about-bottom {
       margin-top: 3rem;
       padding-top: 3rem;
       border-top: 1px solid var(--border);
     }
-
     .about-stats {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
     }
-
     .stat-card {
       background: var(--black);
       border: 1px solid var(--border);
@@ -414,7 +413,6 @@
       transition: border-color var(--transition);
     }
     .stat-card:hover { border-color: var(--gold-muted); }
-
     .stat-number {
       font-family: var(--serif);
       font-size: 2.5rem;
@@ -422,17 +420,8 @@
       line-height: 1;
       margin-bottom: 0.25rem;
     }
-
-    .stat-label {
-      font-size: 0.8rem;
-      color: var(--white-dim);
-      letter-spacing: 0.05em;
-    }
-
-    .skills-block {
-      margin-top: 2rem;
-    }
-
+    .stat-label { font-size: 0.8rem; color: var(--white-dim); letter-spacing: 0.05em; }
+    .skills-block { margin-top: 2rem; }
     .skills-block h3 {
       font-size: 0.75rem;
       font-weight: 500;
@@ -441,13 +430,7 @@
       color: var(--gold);
       margin-bottom: 1rem;
     }
-
-    .skills-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .skill-tag {
       display: inline-block;
       padding: 0.35rem 0.85rem;
@@ -461,14 +444,133 @@
     .skill-tag:hover { border-color: var(--gold); color: var(--gold); }
 
     /* =============================================
-       CAROUSEL (integrated from carousel-component.css)
+       RESUME / EXPERIENCE
     ============================================= */
+    #resume { background: var(--black); }
+    .resume-download-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .timeline { position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+    .job {
+      position: relative;
+      padding: 0 0 3rem 2.5rem;
+    }
+    .job::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0.4rem;
+      width: 9px;
+      height: 9px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+    .job-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .job-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; color: var(--white); }
+    .job-dates {
+      font-size: 0.78rem;
+      color: var(--gold);
+      background: var(--gold-muted);
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .job-company { font-size: 0.875rem; color: var(--gold); font-weight: 500; margin-bottom: 1rem; }
+    .job-duties { list-style: none; margin-bottom: 1rem; }
+    .job-duties li {
+      position: relative;
+      padding-left: 1.25rem;
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      margin-bottom: 0.5rem;
+      line-height: 1.65;
+    }
+    .job-duties li::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-size: 0.8rem; }
+    .job-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .stack-tag {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      background: var(--gold-muted);
+      color: var(--gold);
+      border-radius: 100px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color var(--transition);
+    }
+    .edu-card:hover { border-color: var(--gold); }
+    .edu-degree { font-family: var(--serif); font-size: 1.05rem; margin-bottom: 0.25rem; }
+    .edu-school { font-size: 0.85rem; color: var(--gold); font-weight: 500; margin-bottom: 0.25rem; }
+    .edu-detail { font-size: 0.8rem; color: var(--white-dim); }
+
+    /* =============================================
+       PROJECTS — REDESIGNED
+       Key fix: portrait/mobile screenshots need a 
+       phone-frame style display, not 16:10 landscape
+    ============================================= */
+    #projects { background: var(--surface); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .project-card {
+      background: var(--black);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      border-color: rgba(201,168,76,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    /* ── Carousel container: fixed height, dark stage background ── */
     .project-carousel {
       position: relative;
       width: 100%;
-      aspect-ratio: 16/10;
-      background: var(--surface);
-      border-radius: var(--radius) var(--radius) 0 0;
+      height: 300px;               /* Fixed height — images scale within */
+      background: #0d0d0d;
+      border-bottom: 1px solid var(--border);
       overflow: hidden;
     }
 
@@ -481,310 +583,128 @@
     .carousel-slide {
       min-width: 100%;
       height: 100%;
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      background: #0d0d0d;
     }
 
+    /* Images inside carousel: contain (never crop), centered, subtle shadow */
     .carousel-slide img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    }
+
+    /* For the DialTrend project: web screenshots are wider, use cover */
+    .project-card.web-preview .carousel-slide img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
+      object-position: top center;
+    }
+
+    /* Multi-screenshot layout: show 2 phone screens side by side */
+    .carousel-slide.dual-phones {
+      gap: 8px;
+      padding: 12px 16px;
+    }
+    .carousel-slide.dual-phones img {
+      width: calc(50% - 4px);
+      height: 100%;
+      object-fit: contain;
     }
 
     .carousel-nav {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(10,10,10,0.6);
+      background: rgba(10,10,10,0.75);
       backdrop-filter: blur(4px);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,0.12);
       color: var(--white);
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 2.25rem;
+      height: 2.25rem;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
       z-index: 10;
     }
-
     .carousel-nav:hover {
-      background: rgba(201,168,76,0.2);
+      background: rgba(201,168,76,0.25);
       border-color: var(--gold);
       color: var(--gold);
     }
-
-    .carousel-nav:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 2px;
-    }
-
-    .carousel-prev { left: 1rem; }
-    .carousel-next { right: 1rem; }
+    .carousel-prev { left: 0.75rem; }
+    .carousel-next { right: 0.75rem; }
 
     .carousel-indicators {
       position: absolute;
-      bottom: 1rem;
+      bottom: 0.75rem;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       z-index: 10;
     }
-
     .carousel-dot {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: rgba(245,240,232,0.3);
-      border: 1px solid rgba(245,240,232,0.2);
+      background: rgba(245,240,232,0.25);
+      border: 1px solid rgba(245,240,232,0.15);
       cursor: pointer;
       transition: background 0.2s ease, transform 0.2s ease;
     }
-
-    .carousel-dot:hover {
-      background: rgba(245,240,232,0.5);
-      transform: scale(1.2);
-    }
-
-    .carousel-dot.active {
-      background: var(--gold);
-      border-color: var(--gold);
-      transform: scale(1.1);
-    }
+    .carousel-dot:hover { background: rgba(245,240,232,0.5); transform: scale(1.2); }
+    .carousel-dot.active { background: var(--gold); border-color: var(--gold); transform: scale(1.1); }
 
     .carousel-counter {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(10,10,10,0.7);
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(10,10,10,0.75);
       backdrop-filter: blur(4px);
-      padding: 0.35rem 0.75rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 100px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--white-dim);
       font-weight: 500;
       z-index: 10;
     }
 
-    .carousel-hint {
-      position: absolute;
-      bottom: 3.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.7rem;
-      color: var(--white-dim);
-      opacity: 0.6;
-      pointer-events: none;
-      animation: fade-hint 3s ease-in-out infinite;
-    }
-
-    @keyframes fade-hint {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 0.2; }
-    }
-
-    .carousel-interacted .carousel-hint {
-      display: none;
-    }
-
-    /* =============================================
-       RESUME / EXPERIENCE
-    ============================================= */
-    #resume { background: var(--black); }
-
-    .resume-download-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .timeline {
-      position: relative;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: var(--border);
-    }
-
-    .job {
-      position: relative;
-      padding: 0 0 3rem 2.5rem;
-    }
-
-    .job::before {
-      content: '';
-      position: absolute;
-      left: -4px;
-      top: 0.4rem;
-      width: 9px;
-      height: 9px;
-      background: var(--gold);
-      border-radius: 50%;
-    }
-
-    .job-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .job-title {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      font-weight: 400;
-      color: var(--white);
-    }
-
-    .job-dates {
-      font-size: 0.78rem;
-      color: var(--gold);
-      background: var(--gold-muted);
-      padding: 0.25rem 0.75rem;
-      border-radius: 100px;
-      white-space: nowrap;
-      font-weight: 500;
-    }
-
-    .job-company {
-      font-size: 0.875rem;
-      color: var(--gold);
-      font-weight: 500;
-      margin-bottom: 1rem;
-    }
-
-    .job-duties {
-      list-style: none;
-      margin-bottom: 1rem;
-    }
-
-    .job-duties li {
-      position: relative;
-      padding-left: 1.25rem;
-      font-size: 0.9rem;
-      color: var(--white-dim);
-      margin-bottom: 0.5rem;
-      line-height: 1.65;
-    }
-
-    .job-duties li::before {
-      content: '—';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-      font-size: 0.8rem;
-    }
-
-    .job-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 0.75rem;
-    }
-
-    .stack-tag {
-      font-size: 0.72rem;
-      padding: 0.2rem 0.6rem;
-      background: var(--gold-muted);
-      color: var(--gold);
-      border-radius: 100px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-    }
-
-    .edu-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .edu-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      transition: border-color var(--transition);
-    }
-    .edu-card:hover { border-color: var(--gold); }
-
-    .edu-degree {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .edu-school {
-      font-size: 0.85rem;
-      color: var(--gold);
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-
-    .edu-detail {
-      font-size: 0.8rem;
-      color: var(--white-dim);
-    }
-
-    /* =============================================
-       PROJECTS
-    ============================================= */
-    #projects { background: var(--surface); }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .project-card {
-      background: var(--black);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: border-color var(--transition), transform var(--transition);
-      display: flex;
-      flex-direction: column;
-    }
-    .project-card:hover { border-color: var(--gold); transform: translateY(-3px); }
-
+    /* ── Project body ── */
     .project-body {
       padding: 1.5rem;
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-
     .project-type {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
-
     .project-title {
       font-family: var(--serif);
       font-size: 1.35rem;
       font-weight: 400;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.65rem;
+      line-height: 1.2;
     }
-
     .project-desc {
       font-size: 0.875rem;
       color: var(--white-dim);
@@ -792,31 +712,27 @@
       margin-bottom: 1rem;
       flex: 1;
     }
-
     .project-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem;
+      gap: 0.35rem;
       margin-bottom: 1.25rem;
     }
-
     .project-links {
       display: flex;
       gap: 0.75rem;
       margin-top: auto;
     }
-
     .project-link {
       font-size: 0.78rem;
       font-weight: 500;
-      padding: 0.4rem 1rem;
+      padding: 0.45rem 1rem;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       color: var(--white-dim);
       transition: border-color var(--transition), color var(--transition);
     }
     .project-link:hover { border-color: var(--gold); color: var(--gold); }
-
     .project-link.primary {
       background: var(--gold-muted);
       border-color: var(--gold);
@@ -828,48 +744,52 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 500;
       padding: 0.2rem 0.65rem;
       border-radius: 100px;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
     }
     .status-badge.active { background: rgba(34,197,94,0.12); color: #4ade80; }
     .status-badge.active::before {
       content: '';
-      width: 6px;
-      height: 6px;
+      width: 5px; height: 5px;
       background: #4ade80;
       border-radius: 50%;
       animation: pulse-dot 1.5s infinite;
     }
+    .status-badge.live { background: rgba(45,212,191,0.12); color: var(--teal); }
+    .status-badge.live::before {
+      content: '';
+      width: 5px; height: 5px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse-dot 1.5s infinite;
+    }
     .status-badge.wip { background: rgba(251,191,36,0.12); color: #fbbf24; }
-
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0.4; }
     }
 
+    /* DialTrend special card — teal accent */
+    .project-card.dialtrend {
+      border-color: rgba(45,212,191,0.2);
+    }
+    .project-card.dialtrend:hover {
+      border-color: rgba(45,212,191,0.5);
+      box-shadow: 0 20px 60px rgba(45,212,191,0.08);
+    }
+    .project-card.dialtrend .project-type { color: var(--teal); }
+    .project-card.dialtrend .carousel-dot.active { background: var(--teal); border-color: var(--teal); }
+
     /* =============================================
        CONTACT
     ============================================= */
     #contact { background: var(--black); }
-
-    .contact-inner {
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
+    .contact-inner { max-width: 700px; margin: 0 auto; text-align: center; }
     .contact-inner h2 { margin-bottom: 1rem; }
-
-    .contact-subtext {
-      color: var(--white-dim);
-      font-size: 1rem;
-      margin-bottom: 3rem;
-      line-height: 1.8;
-    }
-
+    .contact-subtext { color: var(--white-dim); font-size: 1rem; margin-bottom: 3rem; line-height: 1.8; }
     .contact-links {
       display: flex;
       justify-content: center;
@@ -877,7 +797,6 @@
       gap: 1rem;
       margin-bottom: 3rem;
     }
-
     .contact-link {
       display: flex;
       align-items: center;
@@ -891,7 +810,6 @@
       transition: border-color var(--transition), color var(--transition), transform var(--transition);
     }
     .contact-link:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
-
     .contact-email-big {
       font-family: var(--serif);
       font-size: clamp(1.5rem, 3vw, 2.25rem);
@@ -913,7 +831,6 @@
       font-size: 0.8rem;
       color: var(--white-dim);
     }
-
     footer a { color: var(--gold); }
 
     /* =============================================
@@ -923,10 +840,8 @@
       nav { padding: 1rem 1.25rem; }
       .nav-links { display: none; }
       .nav-toggle { display: block; }
-
       section { padding: 4rem 1.25rem; }
       #home { padding: 6rem 1.25rem 3rem; }
-
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .about-stats { grid-template-columns: 1fr 1fr; }
       .photo-frame { max-height: 320px; aspect-ratio: 4/3; }
@@ -937,14 +852,10 @@
       .job::before { display: none; }
       .hero-ctas { flex-direction: column; }
       .btn-primary, .btn-outline { text-align: center; justify-content: center; }
-
-      /* Carousel mobile */
+      .project-carousel { height: 240px; }
       .carousel-nav { width: 2rem; height: 2rem; }
-      .carousel-prev { left: 0.5rem; }
-      .carousel-next { right: 0.5rem; }
-      .carousel-counter { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
-      .carousel-indicators { bottom: 0.75rem; gap: 0.4rem; }
-      .carousel-dot { width: 6px; height: 6px; }
+      .carousel-prev { left: 0.4rem; }
+      .carousel-next { right: 0.4rem; }
     }
 
     /* =============================================
@@ -956,19 +867,13 @@
         transform: translateY(24px);
         transition: opacity 0.6s ease, transform 0.6s ease;
       }
-      .fade-up.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      .fade-up.visible { opacity: 1; transform: translateY(0); }
       .fade-up:nth-child(2) { transition-delay: 0.1s; }
       .fade-up:nth-child(3) { transition-delay: 0.2s; }
       .fade-up:nth-child(4) { transition-delay: 0.3s; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      .carousel-track {
-        transition: none;
-      }
+      .carousel-track { transition: none; }
     }
   </style>
 </head>
@@ -976,6 +881,8 @@
 <body>
 
   <a href="#main" class="skip-link">Skip to main content</a>
+  <!-- Custom cursor (desktop only) -->
+  <div class="custom-cursor" id="cursor" aria-hidden="true"></div>
 
   <nav role="navigation" aria-label="Main navigation">
     <a href="#home" class="nav-logo">Yara Vasquez</a>
@@ -994,104 +901,66 @@
 
     <!-- ========== HERO ========== -->
     <section id="home" aria-label="Introduction">
-      <div class="hero-inner">
-        <p class="hero-eyebrow">Software Engineer</p>
-        <h1>Building web<br>experiences for <em>everyone.</em></h1>
-        <p class="hero-tagline">
-          MS Software Engineering · React · TypeScript · Java/Spring Boot ·
-          Accessible UI. I build production-ready applications where
-          usability is a feature, not an afterthought.
-        </p>
+
+      <!-- Full-bleed background photo -->
+      <div class="hero-bg" aria-hidden="true">
+        <img src="Yara.jpg" alt="" />
+      </div>
+
+      <!-- Foreground text -->
+      <div class="hero-content">
+        <h1>Yara<br><em>Vasquez</em></h1>
         <div class="hero-ctas">
-          <a href="#projects" class="btn-primary">View My Work →</a>
+          <a href="#projects" class="btn-primary">View My Work</a>
           <a href="#contact" class="btn-outline">Get In Touch</a>
         </div>
-
-        <div class="ticker-wrap" aria-hidden="true">
-          <div class="ticker">
-            <span class="ticker-item">React <span>·</span></span>
-            <span class="ticker-item">TypeScript <span>·</span></span>
-            <span class="ticker-item">Java <span>·</span></span>
-            <span class="ticker-item">Spring Boot <span>·</span></span>
-            <span class="ticker-item">PostgreSQL <span>·</span></span>
-            <span class="ticker-item">Supabase <span>·</span></span>
-            <span class="ticker-item">WCAG 2.1 <span>·</span></span>
-            <span class="ticker-item">Flutter <span>·</span></span>
-            <span class="ticker-item">Figma <span>·</span></span>
-            <span class="ticker-item">Git/GitHub <span>·</span></span>
-            <span class="ticker-item">React <span>·</span></span>
-            <span class="ticker-item">TypeScript <span>·</span></span>
-            <span class="ticker-item">Java <span>·</span></span>
-            <span class="ticker-item">Spring Boot <span>·</span></span>
-            <span class="ticker-item">PostgreSQL <span>·</span></span>
-            <span class="ticker-item">Supabase <span>·</span></span>
-            <span class="ticker-item">WCAG 2.1 <span>·</span></span>
-            <span class="ticker-item">Flutter <span>·</span></span>
-            <span class="ticker-item">Figma <span>·</span></span>
-            <span class="ticker-item">Git/GitHub <span>·</span></span>
-          </div>
-        </div>
       </div>
+
+      <!-- Scroll indicator -->
+      <div class="hero-scroll" aria-hidden="true">
+        <div class="scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+
     </section>
 
-    <!-- ========== ABOUT (Option C: 70/30 Layout) ========== -->
+    <!-- ========== ABOUT ========== -->
     <section id="about" aria-label="About Yara Vasquez">
       <div class="section-inner">
         <p class="section-label">About Me</p>
-
-        <!-- Top row: bio text (70%) + photo (30%) -->
         <div class="about-grid">
           <div class="about-text fade-up">
-            <h2>Code with<br><em>purpose.</em></h2>
             <p>
-              I'm a software engineer who builds accessible, user-centered web applications
-              from design to deployment. With a master's in software engineering and a
-              background in public health, I bring a rare perspective:
-              <strong>technology should serve everyone</strong>, not just those without barriers.
+              I'm a software engineer who builds user-centered applications from design
+              to production. My background spans public health and software engineering,
+              a combination that shapes how I think about products:
+              <strong>who they serve, who they miss, and how to close that gap.</strong>
             </p>
             <p>
-              My path wasn't typical. I started at Gallaudet University studying public health,
-              working to improve outcomes for underserved communities. When COVID-19 exposed
-              how technology could either bridge or widen gaps in care, I pivoted to software
-              engineering. Now I combine both worlds: technical depth and human empathy.
+              I started at Gallaudet University studying public health, then earned my
+              M.S. in Software Engineering at UMGC. The pivot wasn't accidental because it came
+              from watching technology either solve real problems or quietly create new ones
+              for the people it was never designed with in mind.
             </p>
             <p>
-              I'm currently building <strong>Yairo</strong>, a community platform that makes
-              tech easier to use, while advising student teams on accessible UI implementation
-              at UMGC.
+              Most recently I shipped <strong>DialTrend</strong>, a full-stack React web app
+              from zero to live production in under two months.
             </p>
           </div>
 
-          <!-- Photo column (smaller, 30%) -->
-          <div class="fade-up">
-            <div class="photo-frame">
-              <img
-                src="Yara.jpg"
-                alt="Yara Vasquez, Software Engineer, standing at a Washington DC Metro station with a train passing behind her"
-                loading="lazy"
-              />
-              <div class="photo-caption" aria-hidden="true">
-                <strong>Yara Vasquez</strong>
-                Software Engineer 
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Bottom row: stats + skills (full width) -->
         <div class="about-bottom fade-up">
-          <div class="about-stats"> 
+          <div class="about-stats">
             <div class="stat-card">
               <div class="stat-number">10+</div>
               <div class="stat-label">Student teams mentored</div>
             </div>
-            
             <div class="stat-card">
               <div class="stat-number">AA</div>
               <div class="stat-label">WCAG 2.1 Level · Accessibility</div>
             </div>
           </div>
-
           <div class="skills-block" style="margin-top:2rem;">
             <h3>Technical Skills</h3>
             <div class="skills-grid">
@@ -1113,7 +982,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -1137,17 +1005,20 @@
               <h3 class="job-title">Software Engineer (Founder)</h3>
               <span class="job-dates">Jan 2026 – Present</span>
             </div>
-            <p class="job-company">Yairo · Phoenix, AZ</p>
+            <p class="job-company">DialTrend · dialtrend.com </p>
             <ul class="job-duties">
-              <li>Building community platform with React, TypeScript, and Supabase (PostgreSQL backend)</li>
-              <li>Own full product lifecycle: requirements gathering, UI/UX design, development, and deployment</li>
-              <li>Implementing accessibility-first architecture (WCAG 2.1 AA, keyboard navigation, screen reader support)</li>
+              <li>Architected and shipped a full-stack React + Vite web application from concept to live production deployment, executing the complete SDLC independently</li>
+              <li>Engineered real-time data visualization with dynamic business logic: hourly wait-time analysis and human/bot agent-status detection</li>
+              <li>Established CI/CD pipeline integrating GitHub with Vercel; managed custom domain DNS configuration and production environment setup</li>
+              <li>Designed and implemented 6 customer-facing UI components including onboarding flow, search, feedback form, and privacy modal</li>
             </ul>
             <div class="job-stack">
               <span class="stack-tag">React</span>
-              <span class="stack-tag">TypeScript</span>
-              <span class="stack-tag">Supabase</span>
-              <span class="stack-tag">PostgreSQL</span>
+              <span class="stack-tag">Vite</span>
+              <span class="stack-tag">JavaScript</span>
+              <span class="stack-tag">CSS3</span>
+              <span class="stack-tag">Vercel</span>
+              <span class="stack-tag">CI/CD</span>
             </div>
           </article>
 
@@ -1158,10 +1029,9 @@
             </div>
             <p class="job-company">SWEN 661 Course · University of Maryland Global Campus</p>
             <ul class="job-duties">
-              <li>Advise 10 student teams on visual-first accessibility for deaf and hard-of-hearing users</li>
-              <li>Review implementations (Flutter, React Native, Electron) for WCAG 2.1 Level AA compliance</li>
-              <li>Define product requirements: screen-locking alerts, haptic feedback, real-time captions, ASL integration</li>
-              <li>Bridge knowledge transfer between SWEN 670 capstone and SWEN 661 UI implementation course</li>
+              <li>Audited accessibility implementations across 10 student-led projects (Flutter, React Native, Electron), identifying compliance gaps and delivering actionable recommendations</li>
+              <li>Proposed inclusive interaction patterns — screen-locking alerts, haptic feedback, real-time captions, ASL integration</li>
+              <li>Collaborated with instructors to translate WCAG 2.2 standards into practical UI expectations, supporting 10+ teams</li>
             </ul>
             <div class="job-stack">
               <span class="stack-tag">Flutter</span>
@@ -1179,11 +1049,9 @@
             </div>
             <p class="job-company">CareConnect (Capstone Project) · University of Maryland Global Campus</p>
             <ul class="job-duties">
-              <li>Designed accessible UI in Figma for caregiving app serving patients with dementia, Alzheimer's, and Parkinson's</li>
-              <li>Implemented medication tracking REST API (Java/Spring Boot): fetch, add, approve, and delete endpoints</li>
-              <li>Developed patient virtual check-in page with symptom logging and caregiver notification integration</li>
-              <li>Resolved merge conflicts and merged pull requests in agile team environment via Git/GitHub</li>
-              <li>Contributed to SRS, Technical Design Document, and Deployment Guide documentation</li>
+              <li>Designed 15+ accessible Figma prototypes and translated them into reusable React components following design system principles</li>
+              <li>Implemented medication tracking UI integrating Java/Spring Boot REST API endpoints with client-side state management</li>
+              <li>Participated in agile workflows including sprint planning, code reviews, and PR merges in a team of 20+</li>
             </ul>
             <div class="job-stack">
               <span class="stack-tag">Java</span>
@@ -1203,20 +1071,19 @@
           <div class="edu-card fade-up">
             <p class="edu-degree">Master of Software Engineering</p>
             <p class="edu-school">University of Maryland Global Campus</p>
-            <p class="edu-detail">Dec 2025 · GPA 3.917</p>
-            <p class="edu-detail">President's Scholar · Dean's List</p>
+            <p class="edu-detail">2025</p>
           </div>
           <div class="edu-card fade-up">
             <p class="edu-degree">B.S. Public Health, Minor in Biology</p>
             <p class="edu-school">Gallaudet University</p>
-            <p class="edu-detail">May 2022</p>
+            <p class="edu-detail">2022 </p>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- ========== PROJECTS (with carousels) ========== -->
+    <!-- ========== PROJECTS ========== -->
     <section id="projects" aria-label="Portfolio Projects">
       <div class="section-inner">
         <p class="section-label">Projects</p>
@@ -1224,7 +1091,58 @@
 
         <div class="projects-grid">
 
-          <!-- CareConnect with 8-image carousel -->
+          <!-- ── DialTrend ── FEATURED (web app, landscape screenshots) -->
+          <article class="project-card dialtrend web-preview fade-up">
+            <div class="project-carousel" data-carousel>
+              <div class="carousel-track" data-carousel-track>
+                <!-- DialTrend screenshots are web/landscape — use cover -->
+                <div class="carousel-slide">
+                  <img src="assets/yairo/homepage.png" alt="DialTrend homepage showing wait time tracker" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/yairo/analytics.png" alt="DialTrend analytics dashboard with bar chart" loading="lazy" />
+                </div>
+                <div class="carousel-slide">
+                  <img src="assets/yairo/result.png" alt="DialTrend company result page with call times" loading="lazy" />
+                </div>
+              </div>
+              <button class="carousel-nav carousel-prev" aria-label="Previous slide">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="carousel-nav carousel-next" aria-label="Next slide">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div class="carousel-indicators" data-carousel-indicators></div>
+              <div class="carousel-counter" data-carousel-counter>
+                <span data-current>1</span> / <span data-total>3</span>
+              </div>
+            </div>
+
+            <div class="project-body">
+              <p class="project-type">Community Platform · Full-Stack · Live Product</p>
+              <span class="status-badge live">Live at dialtrend.com</span>
+              <h3 class="project-title">DialTrend</h3>
+              <p class="project-desc">
+                Community-powered customer support wait time tracker. Built as a Deaf founder
+                who makes every call through a relay interpreter — waiting twice. Shipped from
+                zero to production in under 2 months: React + Vite frontend, real-time wait
+                analytics for 20 companies, CI/CD via GitHub + Vercel.
+              </p>
+              <div class="project-tags">
+                <span class="stack-tag">React</span>
+                <span class="stack-tag">Vite</span>
+                <span class="stack-tag">JavaScript</span>
+                <span class="stack-tag">CI/CD</span>
+                <span class="stack-tag">Vercel</span>
+              </div>
+              <div class="project-links">
+                <a href="https://dialtrend.com" class="project-link primary" target="_blank" rel="noopener" aria-label="Visit DialTrend live site">Visit Live Site →</a>
+                <a href="https://github.com/YaraHub25/DialTrend-app" class="project-link" target="_blank" rel="noopener" aria-label="View DialTrend on GitHub">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ── CareConnect ── (mobile screenshots — portrait, use contain) -->
           <article class="project-card fade-up">
             <div class="project-carousel" data-carousel>
               <div class="carousel-track" data-carousel-track>
@@ -1250,28 +1168,19 @@
                   <img src="assets/careconnect/caregiver-homepage.png" alt="Caregiver homepage" loading="lazy" />
                 </div>
                 <div class="carousel-slide">
-                  <img src="assets/careconnect/accessibility.png" alt="Accessibility settings" loading="lazy" />
+                  <img src="assets/careconnect/accessibility.png" alt="Accessibility settings screen" loading="lazy" />
                 </div>
               </div>
-              
               <button class="carousel-nav carousel-prev" aria-label="Previous slide">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
               <button class="carousel-nav carousel-next" aria-label="Next slide">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
               </button>
-              
               <div class="carousel-indicators" data-carousel-indicators></div>
-              
               <div class="carousel-counter" data-carousel-counter>
                 <span data-current>1</span> / <span data-total>8</span>
               </div>
-              
-              <div class="carousel-hint" aria-hidden="true">← Swipe →</div>
             </div>
 
             <div class="project-body">
@@ -1280,8 +1189,8 @@
               <h3 class="project-title">CareConnect</h3>
               <p class="project-desc">
                 Caregiving coordination app for patients with dementia, Alzheimer's, and Parkinson's.
-                I designed the accessible UI in Figma and implemented medication tracking REST API
-                endpoints using Java/Spring Boot. Worked in an agile team of 20+ across 5 sub-teams.
+                Designed accessible UI in Figma and implemented medication tracking REST API endpoints
+                using Java/Spring Boot. Worked in an agile team of 20+ across 5 sub-teams.
               </p>
               <div class="project-tags">
                 <span class="stack-tag">Java</span>
@@ -1292,75 +1201,18 @@
                 <span class="stack-tag">WCAG 2.1</span>
               </div>
               <div class="project-links">
-                <a href="https://github.com/YaraHub25" class="project-link primary" aria-label="View CareConnect on GitHub">View on GitHub →</a>
+                <a href="https://github.com/YaraHub25" class="project-link primary" target="_blank" rel="noopener" aria-label="View CareConnect on GitHub">View on GitHub →</a>
               </div>
             </div>
           </article>
 
-          <!-- Yairo with 3-image carousel -->
+          <!-- ── CareConnect: Visual-First (no images yet, placeholder) ── -->
           <article class="project-card fade-up">
-            <div class="project-carousel" data-carousel>
+            <div class="project-carousel" data-carousel style="background: linear-gradient(135deg, #0f1a18 0%, #0d1614 100%);">
               <div class="carousel-track" data-carousel-track>
-                <div class="carousel-slide">
-                  <img src="assets/yairo/homepage.png" alt="Yairo homepage" loading="lazy" />
-                </div>
-                <div class="carousel-slide">
-                  <img src="assets/yairo/analytics.png" alt="Yairo analytics dashboard" loading="lazy" />
-                </div>
-                <div class="carousel-slide">
-                  <img src="assets/yairo/result.png" alt="Yairo result screen" loading="lazy" />
-                </div>
-              </div>
-              
-              <button class="carousel-nav carousel-prev" aria-label="Previous slide">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </button>
-              <button class="carousel-nav carousel-next" aria-label="Next slide">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-              
-              <div class="carousel-indicators" data-carousel-indicators></div>
-              
-              <div class="carousel-counter" data-carousel-counter>
-                <span data-current>1</span> / <span data-total>3</span>
-              </div>
-              
-              <div class="carousel-hint" aria-hidden="true">← Swipe →</div>
-            </div>
-
-            <div class="project-body">
-              <p class="project-type">Community Platform · Full-Stack · Startup</p>
-              <span class="status-badge wip">In Development</span>
-              <h3 class="project-title">Yairo</h3>
-              <p class="project-desc">
-                Community-powered platform designed to make tech easier to use.
-                Solo project where I own the full stack: product decisions, UI/UX design
-                in Figma, React/TypeScript frontend, Supabase authentication, and
-                PostgreSQL database integration.
-              </p>
-              <div class="project-tags">
-                <span class="stack-tag">React</span>
-                <span class="stack-tag">TypeScript</span>
-                <span class="stack-tag">Supabase</span>
-                <span class="stack-tag">PostgreSQL</span>
-                <span class="stack-tag">Figma</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/YaraHub25/yairo" class="project-link primary" aria-label="View Yairo on GitHub">View Code →</a>
-              </div>
-            </div>
-          </article>
-
-          <!-- SWEN 661 (no carousel needed) -->
-          <article class="project-card fade-up">
-            <div class="project-carousel" data-carousel>
-              <div class="carousel-track" data-carousel-track>
-                <div class="carousel-slide">
-                  <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface);font-family:var(--serif);font-size:3rem;color:var(--gold);opacity:0.3;font-style:italic;">A11Y</div>
+                <div class="carousel-slide" style="flex-direction:column;gap:0.5rem;">
+                  <div style="font-family:var(--serif);font-size:3.5rem;color:var(--teal);opacity:0.25;font-style:italic;letter-spacing:-0.02em;">A11Y</div>
+                  <div style="font-size:0.7rem;color:var(--white-faint);letter-spacing:0.2em;text-transform:uppercase;">Visual-First Design</div>
                 </div>
               </div>
             </div>
@@ -1368,12 +1220,12 @@
             <div class="project-body">
               <p class="project-type">Accessibility · Advisory · UI/UX</p>
               <span class="status-badge active">Active</span>
-              <h3 class="project-title">CareConnect: Visual-First Variant</h3>
+              <h3 class="project-title">CareConnect: Visual-First</h3>
               <p class="project-desc">
                 As accessibility stakeholder for SWEN 661, I'm guiding a team redesigning
-                CareConnect for deaf and hard-of-hearing users. Design priorities: audio
-                elimination, screen-locking alerts, haptic feedback, real-time captions,
-                and WCAG 2.1 Level AA compliance across mobile, desktop, and web.
+                CareConnect for deaf and hard-of-hearing users — eliminating all audio dependencies,
+                adding screen-locking alerts, haptic feedback, real-time captions, and achieving
+                WCAG 2.1 Level AA compliance across mobile, desktop, and web.
               </p>
               <div class="project-tags">
                 <span class="stack-tag">Flutter</span>
@@ -1411,13 +1263,16 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
               GitHub
             </a>
-            <a href="mailto:yaralili15@gmail.com" class="contact-link" aria-label="Send email to Yara Vasquez">
+            <a href="https://dialtrend.com" class="contact-link" target="_blank" rel="noopener" aria-label="Visit DialTrend">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              dialtrend.com
+            </a>
+            <a href="/cdn-cgi/l/email-protection#1861796a7974717471292d587f75797174367b7775" class="contact-link" aria-label="Send email to Yara Vasquez">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               Email
             </a>
           </div>
 
-          <a href="mailto:yaralili15@gmail.com" class="contact-email-big">yaralili15@gmail.com</a>
         </div>
       </div>
     </section>
@@ -1426,133 +1281,90 @@
 
   <footer role="contentinfo">
     <p>
-      © 2026 Yara Vasquez · Built with HTML, CSS &amp; care ·
-      <a href="https://github.com/YaraHub25/yaravasquez" target="_blank" rel="noopener">View source on GitHub</a>
+      © 2026 · Yara Vasquez 
     </p>
   </footer>
 
   <!-- ============================================================
-       JAVASCRIPT (Carousel + Navigation)
+       JAVASCRIPT
   ============================================================ -->
-  <script>
-    // Carousel functionality
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     class Carousel {
       constructor(element) {
         this.carousel = element;
         this.track = element.querySelector('[data-carousel-track]');
+        if (!this.track) return;
         this.slides = Array.from(this.track.children);
         this.prevButton = element.querySelector('.carousel-prev');
         this.nextButton = element.querySelector('.carousel-next');
         this.indicatorsContainer = element.querySelector('[data-carousel-indicators]');
         this.counter = element.querySelector('[data-carousel-counter]');
-        
-        this.currentindex = 0;
+        this.currentIndex = 0;
         this.totalSlides = this.slides.length;
-        
         this.init();
       }
-      
+
       init() {
-        this.slides.forEach((_, index) => {
-          const dot = document.createElement('button');
-          dot.className = 'carousel-dot';
-          dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
-          if (index === 0) dot.classList.add('active');
-          dot.addEventListener('click', () => this.goToSlide(index));
-          this.indicatorsContainer.appendChild(dot);
-        });
-        
-        this.dots = Array.from(this.indicatorsContainer.children);
-        
-        this.prevButton.addEventListener('click', () => this.prev());
-        this.nextButton.addEventListener('click', () => this.next());
-        
+        if (this.indicatorsContainer) {
+          this.slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            dot.addEventListener('click', () => this.goTo(i));
+            this.indicatorsContainer.appendChild(dot);
+          });
+          this.dots = Array.from(this.indicatorsContainer.children);
+        }
+
+        this.prevButton?.addEventListener('click', () => this.prev());
+        this.nextButton?.addEventListener('click', () => this.next());
+
         this.carousel.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowLeft') this.prev();
           if (e.key === 'ArrowRight') this.next();
         });
-        
-        this.addSwipeSupport();
-        
+
         if (this.counter) {
-          this.counter.querySelector('[data-total]').textContent = this.totalSlides;
+          const totalEl = this.counter.querySelector('[data-total]');
+          if (totalEl) totalEl.textContent = this.totalSlides;
         }
+
+        this.addSwipe();
       }
-      
-      goToSlide(index) {
-        this.currentindex = index;
-        const offset = -100 * index;
-        this.track.style.transform = `translateX(${offset}%)`;
-        
-        this.dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === index);
-        });
-        
-        if (this.counter) {
-          this.counter.querySelector('[data-current]').textContent = index + 1;
-        }
-        
-        this.carousel.classList.add('carousel-interacted');
+
+      goTo(index) {
+        this.currentIndex = index;
+        this.track.style.transform = `translateX(${-100 * index}%)`;
+        this.dots?.forEach((d, i) => d.classList.toggle('active', i === index));
+        const curr = this.counter?.querySelector('[data-current]');
+        if (curr) curr.textContent = index + 1;
       }
-      
-      next() {
-        const nextindex = (this.currentindex + 1) % this.totalSlides;
-        this.goToSlide(nextindex);
-      }
-      
-      prev() {
-        const previndex = (this.currentindex - 1 + this.totalSlides) % this.totalSlides;
-        this.goToSlide(previndex);
-      }
-      
-      addSwipeSupport() {
+
+      next() { this.goTo((this.currentIndex + 1) % this.totalSlides); }
+      prev() { this.goTo((this.currentIndex - 1 + this.totalSlides) % this.totalSlides); }
+
+      addSwipe() {
         let startX = 0;
-        let isDragging = false;
-        
-        this.carousel.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].clientX;
-          isDragging = true;
-        });
-        
-        this.carousel.addEventListener('touchmove', (e) => {
-          if (!isDragging) return;
-          e.preventDefault();
-        });
-        
+        this.carousel.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
         this.carousel.addEventListener('touchend', (e) => {
-          if (!isDragging) return;
-          
-          const endX = e.changedTouches[0].clientX;
-          const diff = startX - endX;
-          
-          if (Math.abs(diff) > 50) {
-            if (diff > 0) {
-              this.next();
-            } else {
-              this.prev();
-            }
-          }
-          
-          isDragging = false;
+          const diff = startX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 40) { diff > 0 ? this.next() : this.prev(); }
         });
       }
     }
 
-    // Initialize all carousels on page
     document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('[data-carousel]').forEach(el => {
-        new Carousel(el);
-      });
+      document.querySelectorAll('[data-carousel]').forEach(el => new Carousel(el));
     });
 
     // Fade-in on scroll
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.1 }
     );
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Mobile nav toggle
+    // Mobile nav
     const toggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
     toggle?.addEventListener('click', () => {
@@ -1562,13 +1374,27 @@
         : 'display:flex;flex-direction:column;position:absolute;top:100%;left:0;width:100%;background:var(--off-black);padding:1.5rem 2rem;border-bottom:1px solid var(--border);gap:1.25rem;';
       toggle.setAttribute('aria-expanded', String(!open));
     });
-
     document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) navLinks.style.cssText = '';
-      });
+      link.addEventListener('click', () => { if (window.innerWidth <= 768) navLinks.style.cssText = ''; });
     });
-  </script>
 
+    // Custom cursor + photo spotlight
+    const cursor = document.getElementById('cursor');
+    const photoPanel = document.getElementById('home');
+    const spotlight = null;
+    if (cursor && window.matchMedia('(pointer: fine)').matches) {
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
+        // Grow on hover over any element (handled via event listeners)
+      });
+      document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+      document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+      });
+    } else if (cursor) { cursor.style.display = 'none'; }
+  </script>
 </body>
 </html>
